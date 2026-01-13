@@ -1,7 +1,7 @@
 // src/services/deudores.js
 
 // Ej: http://192.168.99.253:8080/adeudos-api
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8080/adeudos-api";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://b88e0bd2df17.sn.mynetname.net:80/adeudos-api";
 
 function buildUrl(path, params) {
   const base = API_BASE.replace(/\/$/, ""); // sin "/" final
