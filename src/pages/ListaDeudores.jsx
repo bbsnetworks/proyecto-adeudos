@@ -213,17 +213,41 @@ export default function ListaDeudores() {
             {rows.map((x) => (
               <article
                 key={x.id}
-                className="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-4 hover:bg-neutral-900/70 transition"
+                className="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-5 hover:bg-neutral-900/70 transition shadow-sm"
               >
-                <header className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-semibold leading-tight">{x.nombre}</h3>
-                    <p className="text-xs text-neutral-400">
-                      {x.telefono || "—"}
-                    </p>
+                {/* Header */}
+                <header className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3 className="font-semibold leading-tight text-base truncate">
+                      {x.nombre}
+                    </h3>
+
+                    <div className="mt-1 flex items-center gap-2 text-xs text-neutral-400">
+                      <span className="truncate">{x.telefono || "—"}</span>
+                      <span className="text-neutral-700">•</span>
+                      <span className="truncate">{x.plan || "—"}</span>
+                    </div>
+
+                    {/* Dirección destacada (más visible) */}
+                    <div
+                      className={`mt-3 flex items-start gap-2 rounded-xl border px-3 py-2.5 ${
+                        x.meses_atraso >= 6
+                          ? "bg-red-600/10 border-red-600/30"
+                          : x.meses_atraso >= 3
+                          ? "bg-orange-600/10 border-orange-600/30"
+                          : "bg-neutral-800/70 border-neutral-700"
+                      }`}
+                      title={x.direccion || ""}
+                    >
+                      <span className="text-blue-400 mt-0.5">📍</span>
+                      <p className="text-sm font-semibold text-neutral-100 leading-snug break-words">
+                        {x.direccion || "—"}
+                      </p>
+                    </div>
                   </div>
+
                   <span
-                    className={`text-xs rounded-lg px-2 py-1 font-medium ${atrasoChip(
+                    className={`shrink-0 text-xs rounded-lg px-2.5 py-1 font-semibold ${atrasoChip(
                       x.meses_atraso
                     )}`}
                   >
@@ -231,38 +255,41 @@ export default function ListaDeudores() {
                   </span>
                 </header>
 
-                <div className="mt-3 space-y-1.5 text-sm">
-                  <div className="flex items-center justify-between">
+                {/* Detalles */}
+                <div className="mt-4 space-y-2 text-sm">
+                  <div className="flex items-center justify-between gap-3">
                     <span className="text-neutral-400">Último mes pagado</span>
-                    <span className="font-medium">
+                    <span className="font-semibold">
                       {formatMesAnioES(x.ultima_pago)}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-neutral-400">Plan</span>
-                    <span className="text-blue-300">{x.plan || "—"}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
+
+                  <div className="flex items-center justify-between gap-3">
                     <span className="text-neutral-400">Localidad · Nodo</span>
-                    <span className="font-medium">
+                    <span className="font-medium text-neutral-200 text-right truncate max-w-[60%]">
                       {(x.localidad || "—") + " · " + (x.nodo || "—")}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
+
+                  <div className="h-px bg-neutral-800 my-2" />
+
+                  <div className="flex items-center justify-between gap-3">
                     <span className="text-neutral-400">Mensualidad</span>
-                    <span className="font-medium">
+                    <span className="font-semibold">
                       {currency(x.mensualidad)}
                     </span>
                   </div>
                 </div>
 
-                <footer className="mt-3 flex items-center justify-between">
-                  <div className="text-sm font-semibold rounded-lg px-2.5 py-1.5 ring-1 ring-amber-600/30 bg-amber-600/20 text-amber-200">
+                {/* Footer */}
+                <footer className="mt-4 flex items-center justify-between gap-3">
+                  <div className="text-sm font-semibold rounded-xl px-3 py-2 ring-1 ring-amber-600/30 bg-amber-600/20 text-amber-200">
                     {currency(x.adeudo_estimado)}
                   </div>
+
                   <div className="flex gap-2">
                     <button
-                      className="px-3 py-1.5 text-xs rounded-lg bg-neutral-800 hover:bg-neutral-700 border border-neutral-700"
+                      className="px-4 py-2 text-xs rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 font-semibold"
                       onClick={() => {
                         setClienteSel(x);
                         setOpenPagos(true);
@@ -272,9 +299,9 @@ export default function ListaDeudores() {
                     </button>
 
                     <a
-                      className="px-3 py-1.5 text-xs rounded-lg bg-blue-600 hover:bg-blue-500"
+                      className="px-4 py-2 text-xs rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold"
                       href={`https://wa.me/52${(x.telefono || "").replace(
-                        /\\D/g,
+                        /\D/g,
                         ""
                       )}?text=${encodeURIComponent(
                         `Hola ${x.nombre}, notamos ${
